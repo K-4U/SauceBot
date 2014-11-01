@@ -32,6 +32,7 @@ exports.strings = {
 
     # Actions
     'action-sub-set': 'Sub-command set: @1@'
+    'action-reg-set': 'Reg-command set: @1@'
     'action-mod-set': 'Mod-command set: @1@'
     'action-set'    : 'Command set: @1@'
     'action-unset'  : 'Command unset: @1@'
@@ -59,9 +60,12 @@ class Commands extends Module
         @regCmd "set"     , Sauce.Level.Mod, @cmdSet
         @regCmd "setmod"  , Sauce.Level.Mod, @cmdSetMod
         @regCmd "setsub"  , Sauce.Level.Mod, @cmdSetSub
+        @regCmd "setreg"  , Sauce.Level.Mod, @cmdSetReg
         @regCmd "unset"   , Sauce.Level.Mod, @cmdUnset
 
         @regCmd "isSub"   , Sauce.Level.User, @cmdIsSub
+        @regCmd "isReg"   , Sauce.Level.User, @cmdIsReg
+
 
         @regCmd "remotes", Sauce.Level.Owner, @cmdRemotes
         @regCmd "setrem", Sauce.Level.Mod, @cmdSetRem
@@ -185,6 +189,8 @@ class Commands extends Module
     cmdIsSub: (user, args, bot) =>
         bot.say 'user ' + user.name + ' sub = ' + @channel.isSub(user.name)
 
+    cmdIsReg: (user, args, bot) =>
+        bot.say 'user ' + user.name + ' reg = ' + @channel.isReg(user.name)
 
     # !(un)?set <command>  - Unset command
     cmdUnset: (user, args, bot) =>
@@ -269,9 +275,27 @@ class Commands extends Module
 
         cmd = (args.splice 0, 1)[0]
         msg = args.join ' '
-        @setCommand cmd, msg, false, true
+        @setCommand cmd, msg, false, 1
 
         return bot.say @str('action-sub-set', cmd)
+    
+    # !setreg <command> <message> - Set reg-only command (and higher)
+    # !setreg <command> - Unset command
+    cmdSetSub: (user, args, bot) =>
+        unless args[0]?
+            return bot.say @str('err-usage', '!setreg <name> <message>') + '. ' + @str('err-to-forget', '!setreg <name>', '!unset <name>')
+
+        # !setsub <command>
+        if(args.length is 1)
+            return @cmdUnset user, args, bot
+        else
+            @cmdUnset user, args, { say: -> 0 }
+
+        cmd = (args.splice 0, 1)[0]
+        msg = args.join ' '
+        @setCommand cmd, msg, false, 2
+
+        return bot.say @str('action-reg-set', cmd)
 
     # !remotes - Shows remote fields
     cmdRemotes: (user, args, bot) =>
@@ -298,15 +322,15 @@ class Commands extends Module
 
         
 
-    setCommand: (cmd, msg, level, sub = 0) ->
+    setCommand: (cmd, msg, level, reg = 0) ->
         # Make sure people don't accidentally set "!!ip" as a command
         cmd = cmd.replace /^!/, ''
         return unless cmd.length > 0
         
         data =
-            message: msg
-            level  : level
-            sub    : sub
+            message : msg
+            level   : level
+            role    : role
 
         @commands.add cmd, data
         @addTrigger   cmd

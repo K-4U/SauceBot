@@ -20,6 +20,7 @@ exports.DEFAULTS = {
     Role:
         Admin: 'admin'
         Staff: 'staff'
+        Regular: 'regular'
         Subscriber: 'subscriber'
         Turbo: 'turbo'
 
