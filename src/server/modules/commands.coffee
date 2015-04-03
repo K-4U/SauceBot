@@ -197,7 +197,7 @@ class Commands extends Module
         b = @delTriggerIgnoreCase cmd
 
         if say
-            @bot.say (@str('action-unset', cmd) if a or b), network
+            @bot.say @str('action-unset', cmd), network if a or b
 
 
     # Removes a command (not case sensitive)

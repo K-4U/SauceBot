@@ -128,7 +128,7 @@ class Quotes extends Module
         args.splice(0,1)
         msg = args.join(' ')
 
-        @addQuote(list, msg)
+        @addQuote(list, msg, network)
 
     cmdEditQuote: (user, args, cmd, network) =>
         if args.length < 3

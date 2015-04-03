@@ -117,7 +117,7 @@ class TwitchAPI extends Module
         setTimeout @checkHosts, @config.get('seconds') * 1000
 
 
-    checkHosts: (network) =>
+    checkHosts: =>
         if @config.get 'hosts'
             @getHosts @channel.name.toLowerCase(), (data) =>
                 newChannels = []
@@ -126,9 +126,9 @@ class TwitchAPI extends Module
                         #now. Get the viewers of said channels
                         @getViewers newChannel['host'], (viewers, channel) =>
                             if isNaN viewers
-                                @bot.say @str('str-hosted-nv', channel), network
+                                @bot.say @str('str-hosted-nv', channel), Network.Twitch
                             else
-                                @bot.say @str('str-hosted', channel, viewers), network
+                                @bot.say @str('str-hosted', channel, viewers), Network.Twitch
                 
                     newChannels.push(newChannel['host'])
 

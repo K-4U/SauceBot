@@ -98,7 +98,7 @@ class Counter extends Module
 
         # Create a trigger that manages a counter
         @triggers[ctr] = trig.buildTrigger  this, ctr, Sauce.Level.Mod,
-            (user, args) =>
+            (user, args, bot, network) =>
                 @cmdCounter ctr, user, args, network
 
         @channel.register @triggers[ctr]
@@ -128,16 +128,16 @@ class Counter extends Module
 
             res = switch symbol
               when '='
-                @counterSet ctr, value, network
+                @counterSet ctr, value
               when '+'
                 value = 1 if valstr is ''
-                @counterAdd ctr, value, network
+                @counterAdd ctr, value
               when '-'
                 value = 1 if valstr is ''
-                @counterAdd ctr, 0-value, network
+                @counterAdd ctr, 0-value
 
 
-        @bot.say ("[Counter] #{res}" if res?), network
+        @bot.say "[Counter] #{res}", network if res?
 
 
     # Handles:
@@ -150,7 +150,7 @@ class Counter extends Module
         unless isNaN value
             res = @counterSet ctr, value, network
 
-        @bot.say ("[Counter] #{res}" if res?), network
+        @bot.say "[Counter] #{res}", network if res?
 
 
     # Handles:

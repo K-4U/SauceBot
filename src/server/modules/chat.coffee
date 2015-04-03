@@ -56,9 +56,9 @@ class Chat extends Module
         @regCmd "pickusers", Sauce.Level.Mod, userpicker
 
         @regCmd "users clear", Sauce.Level.Mod,
-            (user, args) =>
+            (user, args, bot, network) =>
                 @users = {}
-                @bot.say "[Users] " + @str('users-cleared')
+                @bot.say "[Users] " + @str('users-cleared'), network
 
         @regVar 'users', (user, args, cb) =>
                 if not args[0]? then return cb Object.keys(@users).length
