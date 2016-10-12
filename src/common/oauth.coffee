@@ -61,6 +61,7 @@ class TokenJar
             url   : API_ROOT + resource
             method: 'GET'
             json  : true
+            headers: { 'Client-ID': @clientID }
 
             qs    : { oauth_token: @authToken }
         }
@@ -91,6 +92,7 @@ class TokenJar
 
             form  : { oauth_token: @authToken }
             qs    : { oauth_token: @authToken }
+            headers: { 'Client-ID': @clientID }
 
             json  : params
         }
@@ -121,6 +123,7 @@ class TokenJar
 
             form  : { oauth_token: @authToken }
             qs    : { oauth_token: @authToken }
+            headers: { 'Client-ID': @clientID }
 
             json  : params
         }
